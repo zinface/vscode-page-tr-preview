@@ -1,0 +1,60 @@
+{
+  "name": "PageTrPreview",
+  "publisher": "zinface",
+  "displayName": "Page-tr Preview",
+  "description": "Edit and preview Page-tr documents in VS Code",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.22.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:page-tr.sidePreview",
+    "onCommand:page-tr.switch"
+  ],
+  "main": "./out/extenstion.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "page-tr.sidePreview",
+        "title": "Show Preview",
+        "category": "Page-Tr"
+      },
+      {
+        "command": "page-tr.switch",
+        "title": "Switch (↹)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "page-tr.sidePreview",
+          "group": "navigation",
+          "when": "editorFocus && resourceExtname == .tr"
+        },
+        {
+          "command": "page-tr.switch",
+          "group": "navigation",
+          "when": "resourceScheme == webview-panel"
+        }
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "zinface <zinfacex@gmail.com>",
+  "license": "ISC",
+  "scripts": {
+    "build": "tsc -p ./",
+    "test": "tsc&&vsce package && code --install-extension PageTrPreview-0.0.1.vsix",
+    "watch": "tsc -w -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.37",
+    "vscode": "^1.1.37"
+  }
+}
