@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
-import {isPageTrFile, PageTrManTask} from './pagetr'
+import { PageTransformer } from './page-engine'
+import { isPageTrFile}  from './pagetr'
 
 const PreviewTypeMan = "PreviewTypeMan"
 const PreviewTypeHtml = "PreviewTypeHtml"
@@ -10,7 +11,7 @@ class PageTrPreviewView {
     public static currentView: PageTrPreviewView | undefined;
     public static currentViewstatus: vscode.Disposable | undefined
 
-    private readonly _uri: vscode.Uri
+    private _uri: vscode.Uri
     private readonly _panel: vscode.WebviewPanel;
     private readonly _webview: vscode.Webview
 
@@ -94,14 +95,16 @@ class PageTrPreviewView {
     }
 
     private _update(uri?:vscode.Uri) {
+        if (uri) {
+            this._uri=uri
+        }
         if (PageTrPreviewView.currentPreviewType == PreviewTypeMan) {
-            // vscode.window.showInformationMessage("渲染..")
             vscode.workspace.openTextDocument(uri?uri:this._uri).then(document => {
-                this._webview.html = PageTrManTask.getMan(document.getText())
+                this._webview.html = PageTransformer.PageForUnixMan(document.getText())
             })
         } else {
             vscode.workspace.openTextDocument(uri?uri:this._uri).then(document => {
-                this._webview.html = PageTrManTask.getHtml(document.getText());
+                this._webview.html = PageTransformer.PageForWebHtml(document.getText());
             })
         }
     }
