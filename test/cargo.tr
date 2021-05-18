@@ -1,0 +1,208 @@
+$$comment "      ____                       ______       "
+$$comment "     / __ \____ _____ ____      /_  __/____   "
+$$comment "    / /_/ / __ `/ __ `/ _ \______/ / / ___/   "
+$$comment "   / ____/ /_/ / /_/ /  __/_____/ / / /       "
+$$comment "  /_/    \__,_/\__, /\___/     /_/ /_/        "
+$$comment "              /____/                          "
+$$comment "                                              "
+
+$$title Cargo 1 "2021-04-30 11:32:59" v0.1 文档标题
+$$subtitle NAME
+    $$subcontent Cargo
+        \- Rust 的构建工具和包管理器
+
+        您在安装 Rustup 时，也会安装 Rust 构建工具和包管理器的最新稳定版，即 Cargo。
+        
+        Cargo 可以做很多事情：
+            $$encode
+                cargo build 可以构建项目
+                cargo run 可以运行项目
+                cargo test 可以测试项目
+                cargo doc 可以为项目构建文档
+                cargo publish 可以将库发布到 crates.io。
+            $$decode
+
+$$subtitle Rust crates.io 索引镜像使用帮助
+    编辑 ~/.cargo/config 文件，添加以下内容：
+        $$encode
+            [source.crates-io]
+            replace-with = 'tuna'
+
+            [source.tuna]
+            registry = "https://mirrors.bfsu.edu.cn/git/crates.io-index.git"
+        $$decode
+    该镜像可加快 cargo 读取软件包索引的速度。
+
+
+$$subtitle 基本使用
+    $$subsection  要检查您是否安装了 Rust 和 Cargo，可以在终端中运行：
+            $$subcontent cargo --version
+                $$cbegin
+                    cargo 1.51.0 (43b129a20 2021-03-16)
+                $$cend
+
+$$subtitle 其它工具
+    Rust 支持多种编辑器：
+        $$encode
+            VS CODE
+            SUBLIME TEXT 3
+            ATOM
+            INTELLIJ IDEA
+            ECLIPSE
+            VIM
+            EMACS
+            GEAN
+        $$decode
+
+$$subtitle 创建新项目
+    我们将在新的 Rust 开发环境中编写一个小应用。首先用 Cargo 创建一个新项目。在您的终端中执行：
+
+    $$subcontent cargo new hello-rust
+        $$cbegin
+            这会生成一个名为 hello-rust 的新目录，其中包含以下文件：
+            $$encode
+                hello-rust
+                |- Cargo.toml
+                |- src
+                |- main.rs        
+            $$decode
+        $$cend
+        $$cbegin
+            $$subcontent $$fiCargo.toml$$fr
+                $$cbegin
+                    为 Rust 的清单文件。其中包含了项目的元数据和依赖库。
+                $$cend
+            $$subcontent $$fisrc/main.rs$$fr
+                $$cbegin
+                    为编写应用代码的地方。
+                $$cend
+        $$cend
+
+    $$subcontent cargo new
+        $$cbegin
+            会生成一个新的“Hello, world!”项目！我们可以进入新创建的目录中，执行下面的命令来运行此程序：
+        $$cend
+
+    $$subcontent cargo run
+        $$cbegin
+            您应该会在终端中看到如下内容：
+            $$encode
+                $ cargo run
+                Compiling hello-rust v0.1.0 (/Users/ag_dubs/rust/hello-rust)
+                    Finished dev [unoptimized + debuginfo] target(s) in 1.34s
+                    Running `target/debug/hello-rust`
+                Hello, world!
+            $$decode
+        $$cend
+
+
+$$subtitle 添加依赖
+    现在我们来为应用添加依赖。您可以在 crates.io，即 Rust 包的仓库中找到所有类别的库。
+    在 Rust 中，我们通常把包称作“crates”。
+
+    在本项目中，我们使用了名为 ferris-says 的库。
+
+    我们在 Cargo.toml 文件中添加以下信息（从 crate 页面上获取）：
+
+    $$encode
+        [dependencies]
+        ferris-says = "0.2"
+    $$decode
+
+    接着运行：
+    $$fbcargo build$$fr
+
+    …之后 Cargo 就会安装该依赖。
+
+    运行此命令会创建一个新文件 Cargo.lock，该文件记录了本地所用依赖库的精确版本。
+
+    要使用该依赖库，我们可以打开 main.rs，删除其中所有的内容（它不过是个示例而已），然后在其中添加下面这行代码：
+
+    $$encode
+        use ferris_says::say;
+    $$decode
+
+    这样我们就可以使用 ferris-says crate 中导出的 say 函数了。
+
+
+$$subtitle 一个 Rust 小应用
+    现在我们用新的依赖库编写一个小应用。在 main.rs 中添加以下代码：
+        $$encode
+            use ferris_says::say; // from the previous step
+            use std::io::{stdout, BufWriter};
+
+            fn main() {
+                let stdout = stdout();
+                let message = String::from("Hello fellow Rustaceans!");
+                let width = message.chars().count();
+
+                let mut writer = BufWriter::new(stdout.lock());
+                say(message.as_bytes(), width, &mut writer).unwrap();
+            }
+        $$decode
+
+    保存完毕后，我们可以输入以下命令来运行此应用：
+
+    cargo run
+
+    如果一切正确，您会看到该应用将以下内容打印到了屏幕上：
+
+    $$encode
+        ----------------------------
+        | Hello fellow Rustaceans! |
+        ----------------------------
+                      \
+                       \
+                         _~^~^~_
+                     \) /  o o  \ (/
+                       '_   -   _'
+                       / '-----' \
+    $$decode
+
+
+$$subtitle 对于VSCode 插件 Rust的片段
+    $$subcontent extern crate
+        $$encode
+            extern crate name;
+        $$decode
+    $$subcontent for
+        $$encode
+            for elem in iter {
+
+            }
+        $$decode
+    $$subcontent macro_rules
+         $$encode
+            macro_rules!  {
+                () => {
+                    
+                };
+            }
+        $$decode
+    $$subcontent if let
+        $$encode
+            if let pattern = value {
+                
+            }
+        $$decode
+    $$subcontent thread_spawn / spawn
+        $$encode
+            std::thread::spawn(move || {
+                
+            })
+        $$decode
+    $$subcontent derive
+        $$encode
+            #[derive()]
+        $$decode
+    $$subcontent cfg
+        $$encode
+            #[cfg()]
+        $$decode
+    $$subcontent test
+        $$encode
+            #[test]
+            fn name() {
+                unimplemented!();
+            }
+        $$decode
