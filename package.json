@@ -3,7 +3,7 @@
   "publisher": "zinface",
   "displayName": "Page-tr Preview",
   "description": "Edit and preview Page-tr documents in VS Code",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.22.0"
   },
@@ -12,7 +12,8 @@
   ],
   "activationEvents": [
     "onCommand:page-tr.sidePreview",
-    "onCommand:page-tr.switch"
+    "onCommand:page-tr.switch",
+    "onCommand:page-tr.generHTML"
   ],
   "main": "./out/extenstion.js",
   "contributes": {
@@ -25,6 +26,10 @@
       {
         "command": "page-tr.switch",
         "title": "Switch (↹)"
+      },
+      {
+        "command": "page-tr.generHTML",
+        "title": "将PageTr转换为html"
       }
     ],
     "menus": {
@@ -38,6 +43,13 @@
           "command": "page-tr.switch",
           "group": "navigation",
           "when": "resourceScheme == webview-panel"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "page-tr.generHTML",
+          "group": "1_modification",
+          "when": "explorerResourceIsFolder"
         }
       ]
     }

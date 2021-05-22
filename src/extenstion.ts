@@ -1,3 +1,6 @@
+import * as fs from 'fs'
+import { join } from 'path'
+import { promisify } from 'util'
 import * as vscode from 'vscode'
 import { PageTransformer } from './page-engine'
 import { isPageTrFile}  from './pagetr'
@@ -113,6 +116,30 @@ class PageTrPreviewView {
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('page-tr.sidePreview', PageTrPreviewView.OpenPreview))
     context.subscriptions.push(vscode.commands.registerCommand('page-tr.switch', PageTrPreviewView.ChangeView))
+    context.subscriptions.push(vscode.commands.registerCommand('page-tr.generHTML', async (uri?: vscode.Uri)=>{
+        const FileExtTr = 'tr'
+        const FileExtHtml = '.html'
+        if (uri) {
+            // 获取目录下的文件名集合
+            const files =  await promisify(fs.readdir)(uri.fsPath);
+
+            // 滤掉规则(要求为.tr名称文件)
+            const PageTrNames = files
+            .filter(m => m.split('.').length == 2 && m.split('.')[1] == FileExtTr)
+
+            // 输出目录
+            if (PageTrNames.length >0 && !fs.existsSync(join(uri.fsPath, "out"))) {
+                fs.mkdirSync(join(uri.fsPath, "out"))
+            }
+
+             // 写入文件夹下
+            PageTrNames.forEach( m => {
+                promisify(fs.readFile)(join(uri.fsPath, m)).then(data => {
+                    promisify(fs.writeFile)(join(join(uri.fsPath, "out"), join(m.split('.')[0] + FileExtHtml)), PageTransformer.PageForWebHtml(data.toString()))
+                })
+            })
+        }
+    }))
 }
 
 export function deactivated(){ }
