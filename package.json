@@ -56,7 +56,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/zinface/vscode-pagetr-preview.git"
   },
   "author": "zinface <zinfacex@gmail.com>",
   "license": "ISC",
